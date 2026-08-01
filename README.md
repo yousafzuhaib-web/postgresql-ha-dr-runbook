@@ -1,5 +1,10 @@
 # PostgreSQL HA/DR Runbook
 
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?logo=postgresql&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Active-success)
+![Platform](https://img.shields.io/badge/Platform-Linux-blue)
+
 Vendor-neutral operational runbook and validation toolkit for PostgreSQL 14+,
 Pgpool-II, synchronous local replication, asynchronous DR replication,
 replication slots, pg_basebackup, pg_ctl promote, and standby.signal.
