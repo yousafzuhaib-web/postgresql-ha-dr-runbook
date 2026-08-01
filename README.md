@@ -1,199 +1,70 @@
 # PostgreSQL High Availability & Disaster Recovery Runbook
 
-Production-ready PostgreSQL High Availability (HA) and Disaster Recovery (DR) runbook using Pgpool-II, Streaming Replication, automatic failover, standby rebuild, and disaster recovery validation.
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14%2B-blue?logo=postgresql)
+![Pgpool-II](https://img.shields.io/badge/Pgpool--II-4.x-success)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Platform](https://img.shields.io/badge/Linux-RHEL%20%7C%20Ubuntu-orange)
+
+Production-ready PostgreSQL High Availability (HA) and Disaster Recovery (DR)
+runbook based on **Pgpool-II**, **Streaming Replication**, **Replication Slots**,
+**WAL Archiving**, and **pg_basebackup**.
 
 ---
 
-## Architecture
-
-### Components
-
-- Applications
-- Pgpool-II VIP
-- Pgpool-II Node 1 (Leader)
-- Pgpool-II Node 2 (Standby)
-- Pgpool-II Node 3 (Watchdog Quorum – no PostgreSQL backend)
-- PostgreSQL Primary
-- Local Synchronous Standby
-- Remote Asynchronous DR Standby
+# Architecture
 
 <p align="center">
-  <img src="images/00_postgresql_ha_dr_architecture.png" width="100%" alt="PostgreSQL HA Architecture">
+  <img src="images/00_postgresql_ha_dr_architecture.png"
+       width="100%"
+       alt="PostgreSQL High Availability Architecture">
 </p>
 
-### Architecture Overview
+---
 
-This reference architecture demonstrates a production-ready PostgreSQL High Availability and Disaster Recovery deployment.
+# Features
 
-**Components**
-
-- Clients / Applications
 - Pgpool-II Cluster
-  - Pgpool Node 1 (Active)
-  - Pgpool Node 2 (Standby)
-  - Pgpool Node 3 (Quorum / Witness only)
-- PostgreSQL Primary
-- PostgreSQL Synchronous Standby
-- Remote Disaster Recovery Standby
-- Shared Storage (optional)
-- Monitoring & Alerting
-
-### High Availability Features
-
-- Pgpool-II connection pooling
-- Load balancing
-- Automatic failover
-- Watchdog heartbeat
-- Quorum-based decision making
-- Streaming replication
-- Replication slots
-- Continuous WAL archiving
-- Point-in-Time Recovery (PITR)
-- Disaster Recovery promotion
-- Standby rebuild using `pg_basebackup`
-
-### Replication Topology
-
-```text
-Client
-      │
-      ▼
-Pgpool-II VIP
-      │
-      ▼
-Primary PostgreSQL
-      │
-      ├────────► Synchronous Standby
-      │
-      └────────► Asynchronous DR Standby
-                     │
-                     ▼
-                 Promotion
-                     │
-                     ▼
-               DR Primary
-
-Pgpool-II Cluster
-
-├── Pgpool Node 1
-│      Active
-│
-├── Pgpool Node 2
-│      Standby
-│
-└── Pgpool Node 3
-       Watchdog Quorum Node
-       No PostgreSQL Backend
-
-```
-
-## Features
-
-- Pgpool-II High Availability
-- Watchdog & Quorum
+- Watchdog Quorum
+- Connection Pooling
 - Automatic Failover
 - Streaming Replication
-- Synchronous Replication
+- Synchronous Standby
 - Asynchronous Disaster Recovery
 - Replication Slots
 - WAL Archiving
 - Point-in-Time Recovery (PITR)
 - pg_basebackup
 - Standby Rebuild
-- Health Validation Scripts
-- Production Runbooks
+- PostgreSQL Validation Scripts
+- Operational Runbooks
 
-# PostgreSQL HA/DR Runbook
+---
 
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?logo=postgresql&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green)
-![Status](https://img.shields.io/badge/Status-Active-success)
-![Platform](https://img.shields.io/badge/Platform-Linux-blue)
+# Supported Versions
 
-Vendor-neutral operational runbook and validation toolkit for PostgreSQL 14+,
-Pgpool-II, synchronous local replication, asynchronous DR replication,
-replication slots, pg_basebackup, pg_ctl promote, and standby.signal.
+| Component | Supported |
+|-----------|-----------|
+| PostgreSQL | 14, 15, 16, 17, 18 |
+| Pgpool-II | 4.x |
+| Linux | RHEL, Rocky Linux, AlmaLinux, Ubuntu |
 
-> **Warning**
->
-> These procedures are intended as reference material.
-> Always test in a non-production environment and adapt commands to your infrastructure before executing them in production.
+---
 
-## Table of Contents
+# Architecture Components
 
-- [Architecture](#architecture)
-- [Features](#features)
-- [Repository Structure](#repository-structure)
-- [Quick Start](#quick-start)
-- [Screenshots](#screenshots)
-- [Runbooks](#runbooks)
-- [SQL Scripts](#sql-scripts)
-- [Safety Notes](#safety-notes)
-- [Author](#author)
+| Component | Description |
+|-----------|-------------|
+| Applications | Client connections |
+| Pgpool-II Node 1 | Active Leader |
+| Pgpool-II Node 2 | Standby |
+| Pgpool-II Node 3 | Watchdog Quorum (No PostgreSQL backend) |
+| PostgreSQL Primary | Read/Write |
+| PostgreSQL Standby | Synchronous Replica |
+| DR Standby | Asynchronous Replica |
 
+---
 
-## Safety
-
-- Replace all placeholders before use.
-- Test in non-production first.
-- Confirm backups, node roles, tablespaces, slots, and change approval.
-- This public version contains no internal hostnames, IP addresses, credentials,
-  company names, or confidential infrastructure details.
-
-## Quick start
-
-```bash
-cp config/environment.example config/environment
-vi config/environment
-chmod +x scripts/bash/*.sh
-./scripts/bash/check-cluster.sh
-./scripts/bash/check-replication.sh
-```
-## Screenshots
-
-### Pgpool-II Backend Nodes
-
-![Pgpool-II Backend Nodes](images/01_pgpool_show_pool_nodes.png)
-
-### PostgreSQL Streaming Replication
-
-![PostgreSQL Streaming Replication](images/02_pg_stat_replication.png)
-
-### Replication Slots
-
-![PostgreSQL Replication Slots](images/03_replication_slots.png)
-
-### Replication Status Summary
-
-![Replication Status Summary](images/04_replication_status_summary.png)
-
-### DR Promotion
-
-![DR Promotion](images/05_promotion_output.png)
-
-### Standby Rebuild
-
-![Standby Rebuild](images/06_pg_basebackup_rebuild.png)
-
-## Structure
-
-```text
-postgresql-ha-dr-runbook
-│
-├── config/
-├── diagrams/
-├── docs/
-├── examples/
-├── images/
-├── scripts/
-│   ├── bash/
-│   └── sql/
-├── .github/
-├── LICENSE
-└── README.md
-```
-
-## Repository Structure
+# Repository Structure
 
 ```text
 postgresql-ha-dr-runbook/
@@ -210,47 +81,94 @@ postgresql-ha-dr-runbook/
 └── README.md
 ```
 
-## Runbooks Included
+---
+
+# Quick Start
+
+```bash
+cp config/environment.example config/environment
+
+chmod +x scripts/bash/*.sh
+
+./scripts/bash/check-cluster.sh
+./scripts/bash/check-replication.sh
+```
+
+---
+
+# Runbooks
 
 | Runbook | Description |
-|---------|-------------|
-| Prechecks | Validate cluster health before maintenance |
-| Switchover | Planned primary change |
-| DR Failover | Disaster Recovery promotion |
-| Failback | Restore the original primary site |
-| Validation | Verify PostgreSQL and Pgpool-II after recovery |
+|----------|-------------|
+| Prechecks | Validate cluster health |
+| Switchover | Planned failover |
+| DR Failover | Promote DR standby |
+| Failback | Restore primary site |
+| Validation | Verify PostgreSQL and Pgpool-II |
 
-## SQL Scripts
+---
+
+# SQL Scripts
 
 | Script | Purpose |
-|---------|---------|
+|----------|---------|
 | replication-status.sql | Streaming replication status |
 | replication-slots.sql | Replication slot validation |
 
-## Supported Versions
+---
 
-| Component | Version |
-|-----------|----------|
-| PostgreSQL | 14, 15, 16, 17, 18 |
-| Pgpool-II | 4.x |
-| Linux | RHEL, Rocky, AlmaLinux, Ubuntu |
+# Screenshots
 
+## Pgpool-II Backend Nodes
 
-## Who is this for?
+![Pgpool](images/01_pgpool_show_pool_nodes.png)
 
-- PostgreSQL DBAs
-- Platform Engineers
-- DevOps Engineers
-- SREs
-- Infrastructure Engineers
-- Database Consultants
+## Streaming Replication
 
-## Related Projects
+![Replication](images/02_pg_stat_replication.png)
+
+## Replication Slots
+
+![Slots](images/03_replication_slots.png)
+
+## Replication Summary
+
+![Summary](images/04_replication_status_summary.png)
+
+## Promotion
+
+![Promotion](images/05_promotion_output.png)
+
+## Standby Rebuild
+
+![Base Backup](images/06_basebackup_rebuild.png)
+
+---
+
+# Safety Notice
+
+> **Warning**
+>
+> These procedures are intended as reference material.
+> Always validate commands, test in a non-production environment, and adapt them to your infrastructure before executing them in production.
+
+---
+
+# Related Projects
 
 - PostgreSQL Health Check Toolkit
   - https://github.com/yousafzuhaib-web/postgresql-health-check
 
-## Author
+---
 
-Zuhaib Yousaf Begum  
+# Author
+
+**Zuhaib Yousaf Begum**
+
 PostgreSQL Consultant
+
+- PostgreSQL HA/DR
+- Performance Tuning
+- Backup & Recovery
+- Automation
+- Azure & AWS
