@@ -1,13 +1,13 @@
 # PostgreSQL High Availability & Disaster Recovery Runbook
 
-Production-ready PostgreSQL High Availability (HA) and Disaster Recovery (DR) runbook using Pgpool-II, Streaming Replication, automated failover procedures, standby rebuild, and disaster recovery validation.
+Production-ready PostgreSQL High Availability (HA) and Disaster Recovery (DR) runbook using Pgpool-II, Streaming Replication, automatic failover, standby rebuild, and disaster recovery validation.
 
-## PostgreSQL High Availability & Disaster Recovery Architecture
+---
+
+## Architecture
 
 <p align="center">
-  <img src="images/00_postgresql_ha_dr_architecture.png"
-       alt="PostgreSQL High Availability and Disaster Recovery Architecture"
-       width="100%">
+  <img src="images/00_postgresql_ha_dr_architecture.png" width="100%" alt="PostgreSQL HA Architecture">
 </p>
 
 ### Architecture Overview
@@ -44,18 +44,54 @@ This reference architecture demonstrates a production-ready PostgreSQL High Avai
 ### Replication Topology
 
 ```text
-Clients
+Client
       │
       ▼
-Pgpool-II Cluster
+Pgpool-II VIP
       │
       ▼
 Primary PostgreSQL
       │
-      ├──────────────► Local Standby (Synchronous)
+      ├────────► Synchronous Standby
       │
-      └──────────────► DR Standby (Asynchronous)
+      └────────► Asynchronous DR Standby
+                     │
+                     ▼
+                 Promotion
+                     │
+                     ▼
+               DR Primary
+
+Pgpool-II Cluster
+
+├── Pgpool Node 1
+│      Active
+│
+├── Pgpool Node 2
+│      Standby
+│
+└── Pgpool Node 3
+       Watchdog Quorum Node
+       No PostgreSQL Backend
+
 ```
+
+## Features
+
+- Pgpool-II High Availability
+- Watchdog & Quorum
+- Automatic Failover
+- Streaming Replication
+- Synchronous Replication
+- Asynchronous Disaster Recovery
+- Replication Slots
+- WAL Archiving
+- Point-in-Time Recovery (PITR)
+- pg_basebackup
+- Standby Rebuild
+- Health Validation Scripts
+- Production Runbooks
+
 # PostgreSQL HA/DR Runbook
 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?logo=postgresql&logoColor=white)
@@ -108,27 +144,40 @@ chmod +x scripts/bash/*.sh
 
 ### Standby Rebuild
 
-![Standby Rebuild](images/06_basebackup_rebuild.png)
+![Standby Rebuild](images/06_pg_basebackup_rebuild.png)
 
 ## Structure
 
 ```text
-config/environment.example
-diagrams/architecture.md
-docs/01-prechecks.md
-docs/02-switchover.md
-docs/03-dr-failover.md
-docs/04-failback.md
-docs/05-validation.md
-examples/myrecovery.conf.example
-images/
-scripts/bash/check-cluster.sh
-scripts/bash/check-replication.sh
-scripts/bash/promote-node.sh
-scripts/bash/rebuild-standby.sh
-scripts/sql/replication-status.sql
-scripts/sql/replication-slots.sql
+postgresql-ha-dr-runbook
+│
+├── config/
+├── diagrams/
+├── docs/
+├── examples/
+├── images/
+├── scripts/
+│   ├── bash/
+│   └── sql/
+├── .github/
+├── LICENSE
+└── README.md
 ```
+
+## Who is this for?
+
+- PostgreSQL DBAs
+- Platform Engineers
+- DevOps Engineers
+- SREs
+- Infrastructure Engineers
+- Database Consultants
+
+## Related Projects
+
+- PostgreSQL Health Check Toolkit
+
+https://github.com/yousafzuhaib-web/postgresql-health-check
 
 ## Author
 
