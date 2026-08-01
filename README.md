@@ -6,6 +6,17 @@ Production-ready PostgreSQL High Availability (HA) and Disaster Recovery (DR) ru
 
 ## Architecture
 
+### Components
+
+- Applications
+- Pgpool-II VIP
+- Pgpool-II Node 1 (Leader)
+- Pgpool-II Node 2 (Standby)
+- Pgpool-II Node 3 (Watchdog Quorum – no PostgreSQL backend)
+- PostgreSQL Primary
+- Local Synchronous Standby
+- Remote Asynchronous DR Standby
+
 <p align="center">
   <img src="images/00_postgresql_ha_dr_architecture.png" width="100%" alt="PostgreSQL HA Architecture">
 </p>
@@ -103,6 +114,24 @@ Vendor-neutral operational runbook and validation toolkit for PostgreSQL 14+,
 Pgpool-II, synchronous local replication, asynchronous DR replication,
 replication slots, pg_basebackup, pg_ctl promote, and standby.signal.
 
+> **Warning**
+>
+> These procedures are intended as reference material.
+> Always test in a non-production environment and adapt commands to your infrastructure before executing them in production.
+
+## Table of Contents
+
+- [Architecture](#architecture)
+- [Features](#features)
+- [Repository Structure](#repository-structure)
+- [Quick Start](#quick-start)
+- [Screenshots](#screenshots)
+- [Runbooks](#runbooks)
+- [SQL Scripts](#sql-scripts)
+- [Safety Notes](#safety-notes)
+- [Author](#author)
+
+
 ## Safety
 
 - Replace all placeholders before use.
@@ -164,6 +193,49 @@ postgresql-ha-dr-runbook
 └── README.md
 ```
 
+## Repository Structure
+
+```text
+postgresql-ha-dr-runbook/
+├── config/
+├── diagrams/
+├── docs/
+├── examples/
+├── images/
+├── scripts/
+│   ├── bash/
+│   └── sql/
+├── .github/
+├── LICENSE
+└── README.md
+```
+
+## Runbooks Included
+
+| Runbook | Description |
+|---------|-------------|
+| Prechecks | Validate cluster health before maintenance |
+| Switchover | Planned primary change |
+| DR Failover | Disaster Recovery promotion |
+| Failback | Restore the original primary site |
+| Validation | Verify PostgreSQL and Pgpool-II after recovery |
+
+## SQL Scripts
+
+| Script | Purpose |
+|---------|---------|
+| replication-status.sql | Streaming replication status |
+| replication-slots.sql | Replication slot validation |
+
+## Supported Versions
+
+| Component | Version |
+|-----------|----------|
+| PostgreSQL | 14, 15, 16, 17, 18 |
+| Pgpool-II | 4.x |
+| Linux | RHEL, Rocky, AlmaLinux, Ubuntu |
+
+
 ## Who is this for?
 
 - PostgreSQL DBAs
@@ -176,8 +248,7 @@ postgresql-ha-dr-runbook
 ## Related Projects
 
 - PostgreSQL Health Check Toolkit
-
-https://github.com/yousafzuhaib-web/postgresql-health-check
+  - https://github.com/yousafzuhaib-web/postgresql-health-check
 
 ## Author
 
