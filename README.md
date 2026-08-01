@@ -1,3 +1,61 @@
+# PostgreSQL High Availability & Disaster Recovery Runbook
+
+Production-ready PostgreSQL High Availability (HA) and Disaster Recovery (DR) runbook using Pgpool-II, Streaming Replication, automated failover procedures, standby rebuild, and disaster recovery validation.
+
+## PostgreSQL High Availability & Disaster Recovery Architecture
+
+<p align="center">
+  <img src="images/00_postgresql_ha_dr_architecture.png"
+       alt="PostgreSQL High Availability & Disaster Recovery Architecture"
+       width="1000">
+</p>
+
+### Architecture Overview
+
+This reference architecture demonstrates a production-ready PostgreSQL High Availability and Disaster Recovery deployment.
+
+**Components**
+
+- Clients / Applications
+- Pgpool-II Cluster
+  - Pgpool Node 1 (Active)
+  - Pgpool Node 2 (Standby)
+  - Pgpool Node 3 (Quorum / Witness only)
+- PostgreSQL Primary
+- PostgreSQL Synchronous Standby
+- Remote Disaster Recovery Standby
+- Shared Storage (optional)
+- Monitoring & Alerting
+
+### High Availability Features
+
+- Pgpool-II connection pooling
+- Load balancing
+- Automatic failover
+- Watchdog heartbeat
+- Quorum-based decision making
+- Streaming replication
+- Replication slots
+- Continuous WAL archiving
+- Point-in-Time Recovery (PITR)
+- Disaster Recovery promotion
+- Standby rebuild using `pg_basebackup`
+
+### Replication Topology
+
+```text
+Clients
+      │
+      ▼
+Pgpool-II Cluster
+      │
+      ▼
+Primary PostgreSQL
+      │
+      ├──────────────► Local Standby (Synchronous)
+      │
+      └──────────────► DR Standby (Asynchronous)
+```
 # PostgreSQL HA/DR Runbook
 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-336791?logo=postgresql&logoColor=white)
