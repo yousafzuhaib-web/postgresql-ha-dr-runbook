@@ -59,6 +59,7 @@ docs/03-dr-failover.md
 docs/04-failback.md
 docs/05-validation.md
 examples/myrecovery.conf.example
+images/
 scripts/bash/check-cluster.sh
 scripts/bash/check-replication.sh
 scripts/bash/promote-node.sh
