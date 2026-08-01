@@ -26,6 +26,27 @@ chmod +x scripts/bash/*.sh
 ./scripts/bash/check-cluster.sh
 ./scripts/bash/check-replication.sh
 ```
+## Screenshots
+
+### Pgpool-II Backend Nodes
+
+![Pgpool-II backend nodes](images/01_pgpool_show_pool_nodes.png)
+
+### PostgreSQL Streaming Replication
+
+![PostgreSQL streaming replication](images/02_pg_stat_replication.png)
+
+### Replication Slots
+
+![PostgreSQL replication slots](images/03_replication_slots.png)
+
+### Replication Status Summary
+
+![Replication status summary](images/04_replication_status_summary.png)
+
+### DR Promotion
+
+![PostgreSQL promotion output](images/05_promotion_output.png)
 
 ## Structure
 
