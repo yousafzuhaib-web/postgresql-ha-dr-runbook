@@ -6,8 +6,8 @@ Production-ready PostgreSQL High Availability (HA) and Disaster Recovery (DR) ru
 
 <p align="center">
   <img src="images/00_postgresql_ha_dr_architecture.png"
-       alt="PostgreSQL High Availability & Disaster Recovery Architecture"
-       width="1000">
+       alt="PostgreSQL High Availability and Disaster Recovery Architecture"
+       width="100%">
 </p>
 
 ### Architecture Overview
@@ -88,23 +88,27 @@ chmod +x scripts/bash/*.sh
 
 ### Pgpool-II Backend Nodes
 
-![Pgpool-II backend nodes](images/01_pgpool_show_pool_nodes.png)
+![Pgpool-II Backend Nodes](images/01_pgpool_show_pool_nodes.png)
 
 ### PostgreSQL Streaming Replication
 
-![PostgreSQL streaming replication](images/02_pg_stat_replication.png)
+![PostgreSQL Streaming Replication](images/02_pg_stat_replication.png)
 
 ### Replication Slots
 
-![PostgreSQL replication slots](images/03_replication_slots.png)
+![PostgreSQL Replication Slots](images/03_replication_slots.png)
 
 ### Replication Status Summary
 
-![Replication status summary](images/04_replication_status_summary.png)
+![Replication Status Summary](images/04_replication_status_summary.png)
 
 ### DR Promotion
 
-![PostgreSQL promotion output](images/05_promotion_output.png)
+![DR Promotion](images/05_promotion_output.png)
+
+### Standby Rebuild
+
+![Standby Rebuild](images/06_basebackup_rebuild.png)
 
 ## Structure
 
