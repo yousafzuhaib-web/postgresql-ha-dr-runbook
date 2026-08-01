@@ -1,0 +1,7 @@
+config/environment
+*.log
+*.out
+*.tmp
+reports/
+.vscode/
+.idea/

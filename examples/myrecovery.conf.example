@@ -1,0 +1,4 @@
+primary_conninfo = 'host=PRIMARY_HOST port=5444 user=usr_replication application_name=sync_replica passfile=''/var/lib/pgsql/.pgpass'''
+primary_slot_name = 'replica_sync'
+recovery_target_timeline = 'latest'
+restore_command = 'scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa PRIMARY_HOST:/postgresql14/archive/%f %p'
